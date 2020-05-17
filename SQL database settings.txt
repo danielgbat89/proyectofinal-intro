@@ -1,0 +1,9 @@
+{
+  "label": "project1",
+  "host": "ec2-35-174-88-65.compute-1.amazonaws.com",
+  "user": "nunuoqncaamyww",
+  "port": 5432,
+  "ssl": true,
+  "database": "d8uj98kvm7rfrl",
+  "password": "e218c3bed1bbb7805ee76d521156e6a01d2078f49edf9870e681356ee826d626"
+}
