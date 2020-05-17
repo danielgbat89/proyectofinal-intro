@@ -27,6 +27,8 @@ import requests
 
 #plot modules
 import matplotlib.pyplot as plt
+from matplotlib.figure import Figure
+from matplotlib.backends.backend_agg import FigureCanvasAgg
 import numpy as np
 import base64
 from io import BytesIO
@@ -94,10 +96,21 @@ def plot():
     fig.savefig(tmpfile, format='png')  #guarda la figura en un espacio temporal
     encoded = base64.b64encode(tmpfile.getvalue()).decode('utf-8') #l decodeutf-8 es para que funcione con jinja
    
-    return render_template("plot.html", data = encoded)
-    
+    #otro dibujo tipo histograma
+    histogram = plt.figure()
+    canvas = FigureCanvasAgg(histogram)
+    x = np.random.rand(10000)
+    ax = histogram.add_subplot(111)
+    ax.hist(x, 100)
+    ax.set_title("Histograma")
 
-#logout
+    temp2 = BytesIO()
+    histogram.savefig(temp2, format='png')
+    encoded2 = base64.b64encode(temp2.getvalue()).decode('utf-8')
+    
+    return render_template("plot.html", data = encoded, data2 = encoded2)
+    
+    
 
 #pagina para agregar fallas como operador
 
