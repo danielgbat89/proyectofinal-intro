@@ -3,6 +3,5 @@ Flask-Session
 psycopg2-binary
 SQLAlchemy
 matplotlib
-pandas
+numpy
 plotly
-scipy
