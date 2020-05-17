@@ -5,3 +5,4 @@ SQLAlchemy
 matplotlib
 numpy
 plotly
+requests

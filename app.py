@@ -1,5 +1,14 @@
 # Final Project - cours CS50
 
+# Antes de "flask run" activar modo virtual y setear variables de entorno
+#1) solo si no aparece ya el (VENV) en la linea de comandos ->  & C:\Users\guillermo\Desktop\Repo\ProyectoFinal_Intro\venv\Scripts\Activate.ps1
+#2) $env:FLASK_DEBUG="1"
+#3) $env:FLASK_APP="application.py"
+#4) $env:DATABASE_URL="postgres://nunuoqncaamyww:e218c3bed1bbb7805ee76d521156e6a01d2078f49edf9870e681356ee826d626@ec2-35-174-88-65.compute-1.amazonaws.com:5432/d8uj98kvm7rfrl"
+#5) flask run
+
+
+
 import os
 
 #modules Flask
@@ -79,7 +88,7 @@ def plot():
 
     ax.set(xlabel='time (s)', ylabel='voltage (mV)',
            title='About as simple as it gets, folks')
-    ax.grid()
+    
 
     tmpfile = BytesIO()
     fig.savefig(tmpfile, format='png')  #guarda la figura en un espacio temporal
