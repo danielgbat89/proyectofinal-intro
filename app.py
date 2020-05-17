@@ -50,7 +50,7 @@ def login():
 #TODO
 
 
-#Logout
+#Logout a
 @app.route("/logout")
 @login_required
 def logout():
