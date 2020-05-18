@@ -1,13 +1,16 @@
 {% extends 'base.html' %}
 
 {% block anchor %}
-        {% if status == False %}
+        {% if logued == False %}
             <a class="nav-link" href='{{ url_for('login') }}'>
-               Login
+               Login 
             </a>
+            <a class="nav-link" href='{{ url_for('register') }}'>
+              Register
+           </a>
         {% else %}
             <a class="nav-link " href='{{ url_for('logout') }}'>
-                Logout <strong>{{ user_email }}</strong>
+                Logout <strong>{{ username }}</strong>
             </a>
         {% endif %}
 
@@ -20,7 +23,7 @@
   <a class="nav-item nav-link active" href='{{ url_for('index') }}'>Inicio</a>
  <a class="nav-item nav-link" href='{{ url_for('AboutUs') }}'>About us</a> 
  <a class="nav-item nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Contacto</a>
-  <a class="nav-item nav-link disabled" href='{{ url_for('plot') }}' tabindex="-1" aria-disabled="true">Plot</a>
+  <a class="nav-item nav-link disabled" href='{{ url_for('plot') }}' tabindex="-1" aria-disabled="true">Report</a>
 </nav>
 
 

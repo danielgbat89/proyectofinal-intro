@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<form action="/register" method="post">
+    <div class="form-group">
+        {% if setname %}
+            <p style="color: red;">Invalid name!</p>
+        {% endif %}
+        <input autocomplete="off" autofocus class="form-control" name="username" placeholder="Username" type="text">
+    </div>
+
+    <div class="form-group">
+        {% if job %}
+            <p style="color: red;">Please select a job!</p>
+        {% endif %}
+        <input autocomplete="off" autofocus class="form-control" name="job" placeholder="REMPLAZAR POR UNA LISTA DE JOBs" type="text">
+    </div>
+
+    <div class="form-group">
+        {% if invalidpassword %}
+        <p style="color: red;">Invalid password!</p>
+        {% endif %}
+        <input class="form-control" name="password" placeholder="Password" type="password">
+    </div>
+
+    <div class="form-group">
+        {% if passwordnotmatch %}
+        <p style="color: red;">Password don't match!</p>
+        {% endif %}
+        <input class="form-control" name="password2" placeholder="Password (again)" type="password">
+    </div>
+    <button class="btn btn-primary" type="submit">Register</button>
+</form>
+
+{% endblock %}

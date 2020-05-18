@@ -50,29 +50,119 @@ Session(app)
 @app.route("/")
 def index():
 
-    return render_template("index.html")
+    return render_template("index.html", logued = False)
 
 #Login
 @app.route("/login")
 def login():
 
-    return render_template("index.html")
-#Register
-#TODO
+    """Log user in"""
+    
+    # Forget any user_id
+    session.clear()
+
+    # User reached route via POST (as by submitting a form via POST)
+    if request.method == "POST":
+
+        # Ensure username was submitted
+        if not request.form.get("username"):
+            return render_template("login.html", invalidpassword=True)
+
+        # Ensure password was submitted
+        elif not request.form.get("password"):
+            return render_template("login.html", invalidpassword=True)
+
+        # Query database for username
+        username=request.form.get("username")
+        rows = db.execute("SELECT * FROM staff WHERE username = :username", {"username": username}).fetchall()
+        db.commit()
+
+        # Ensure username exists and password is correct
+        if len(rows) != 1 or not check_password_hash(rows[0]["hash"], request.form.get("password")):
+            return render_template("login.html", invalidpassword=True)
+
+        # Remember which user has logged in
+        session["user_id"] = rows[0]["id"]
+
+        # Redirect user to home page
+        return redirect("/")
+
+    # User reached route via GET (as by clicking a link or via redirect)
+    else:
+        return render_template("login.html")
+
+@app.route("/register", methods=["GET", "POST"])
+
+def register():
+    """Register user"""
+
+    # Forget any user_id
+    session.clear()
+
+    # User reached route via POST (as by submitting a form via POST)
+    if request.method == "POST":
+
+        # Ensure username was submitted
+        if not request.form.get("username"):
+            return render_template("register.html", setname=True)
+
+        # Ensure password was submitted
+        elif not request.form.get("password"):
+            return render_template("register.html", invalidpassword=True)
+
+        # Ensure password was submitted
+        elif request.form.get("password2") != request.form.get("password"):
+            return render_template("register.html", passwordnotmatch=True)
+
+        # Ensure job was submitted
+        elif not request.form.get("job"):
+            return render_template("register.html", noJob=True)
+
+        username = request.form.get("username")
+        password = request.form.get("password")
+        job = request.form.get("job")
+        hashpass =  generate_password_hash(password)
+        
+        # Insert info in staff Table      
+        db.execute("INSERT INTO staff (username , hash) VALUES (:username, :hash)", {"username": username, "hash": hashpass})
+        db.commit()
+        
+        # Query database for username
+        rows = db.execute("SELECT * FROM users WHERE username = :username", {"username": username}).fetchall()
+        db.commit()
+
+        # Ensure username exists and password is correct
+        if len(rows) != 1 or not check_password_hash(rows[0]["hash"], request.form.get("password")):
+            return render_template("register.html", invalidpassword=True)
+
+        # Remember which user has logged in
+        session["user_id"] = rows[0]["id"]
+
+      # Redirect user to home page
+        return redirect("/")
+
+    # User reached route via GET (as by clicking a link or via redirect)
+    else:
+        return render_template("register.html")
 
 
 #Logout a
 @app.route("/logout")
-@login_required
 def logout():
 
-    return render_template("index.html")
+    """Log user out"""
+
+    # Forget any user_id
+    session.clear()
+
+    # Redirect user to login form
+    return redirect("/")
 
 
 
 @app.route("/aboutus")
 def AboutUs():
-
+    #TODO
     return render_template("index.html")
 
 @app.route("/plot")
@@ -83,7 +173,7 @@ def plot():
     #plot sth
     # Data for plotting
     t = np.arange(0.0, 2.0, 0.01)
-    s = 1 + np.sin(2 * np.pi * t)
+    s = np.sin(2 * np.pi * t)
 
     fig, ax = plt.subplots()
     ax.plot(t, s)
@@ -91,7 +181,7 @@ def plot():
     ax.set(xlabel='time (s)', ylabel='voltage (mV)',
            title='About as simple as it gets, folks')
     
-
+    ax.grid()
     tmpfile = BytesIO()
     fig.savefig(tmpfile, format='png')  #guarda la figura en un espacio temporal
     encoded = base64.b64encode(tmpfile.getvalue()).decode('utf-8') #l decodeutf-8 es para que funcione con jinja
@@ -103,15 +193,18 @@ def plot():
     ax = histogram.add_subplot(111)
     ax.hist(x, 100)
     ax.set_title("Histograma")
-
+    ax.grid()
     temp2 = BytesIO()
     histogram.savefig(temp2, format='png')
     encoded2 = base64.b64encode(temp2.getvalue()).decode('utf-8')
     
     return render_template("plot.html", data = encoded, data2 = encoded2)
     
-    
 
+@app.route("/wind")
+def wind():
+
+    return render_template("wind.html")
 #pagina para agregar fallas como operador
 
 #pagina para aceptar fallas como supervisor
