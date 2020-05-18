@@ -53,7 +53,7 @@ def index():
     return render_template("index.html", logued = False)
 
 #Login
-@app.route("/login")
+@app.route("/login", methods=["GET", "POST"])
 def login():
 
     """Log user in"""
@@ -85,7 +85,7 @@ def login():
         session["user_id"] = rows[0]["id"]
 
         # Redirect user to home page
-        return redirect("/")
+        return render_template("index.html", logued = True)
 
     # User reached route via GET (as by clicking a link or via redirect)
     else:
@@ -124,11 +124,11 @@ def register():
         hashpass =  generate_password_hash(password)
         
         # Insert info in staff Table      
-        db.execute("INSERT INTO staff (username , hash) VALUES (:username, :hash)", {"username": username, "hash": hashpass})
+        db.execute("INSERT INTO staff (username , hash, id_job) VALUES (:username, :hash, :id_job)", {"username": username, "hash": hashpass, "id_job": job})
         db.commit()
         
         # Query database for username
-        rows = db.execute("SELECT * FROM users WHERE username = :username", {"username": username}).fetchall()
+        rows = db.execute("SELECT * FROM staff WHERE username = :username", {"username": username}).fetchall()
         db.commit()
 
         # Ensure username exists and password is correct
